@@ -5,7 +5,7 @@ def ask(string)
   year % 4 == 0 && year % 100 != 0 || year % 400 == 0 ? year = 366 : year = 365
 
   if string.class != String
-    puts "ERROR: This is not a string!"
+    puts "ERROR: the argument is not a string!"
   else
     case string
     when "time"
@@ -19,7 +19,7 @@ def ask(string)
     when "remaining weeks"
       puts 52 - time.strftime("%V").to_i
     else
-      puts "Error: that argument is not exists"
+      puts "Error: that argument is not exists!"
     end
   end
 end
