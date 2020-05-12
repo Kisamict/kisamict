@@ -1,7 +1,7 @@
 def my_compact(array)
   output = []
   for element in array do
-    next if element == nil
+    next unless element == nil
     output << element
   end
   p output

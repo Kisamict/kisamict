@@ -1,17 +1,15 @@
 def score_throws(array)
-  score = 0
-  array.each do |radius|
-    if radius > 10
-      score += 0
-    elsif (5..10).include?(radius)
-      score += 5
-    elsif radius < 5
-      score += 10
-    end
-    score = 0 if array.empty?
+
+  return p 0 if array.empty?
+
+  result = array.reduce(0) do |score, r|
+    next score += 5 if (5..10).include?(r)
+    next score += 10 if (0...5).include?(r)
+    score
   end
-  score += 100 if array.all? {|value| value < 5}
-  puts score
+
+  result += 100 if array.all?{|element| element < 5}
+  p result
 end
 
-score_throws([1, 7, 10, 15])
+score_throws([1,2,3,7])
