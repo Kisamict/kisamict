@@ -1,9 +1,12 @@
+
 def my_inject(array, arg)
 
   if block_given?
 
-    array.each { |elem| arg = yield(arg, elem) }
-    arg
+    result = arg
+    for elem in array
+      result = yield(result, elem)
+    end
 
   else
 
@@ -11,11 +14,11 @@ def my_inject(array, arg)
 
     result = array[0]
 
-    array.each do |elem|
+    for elem in array
       next if array.index(elem) == 0
       result = result.send(arg, elem)
     end
 
-    result
   end
+  result
 end

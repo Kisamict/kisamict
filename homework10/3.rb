@@ -1,8 +1,9 @@
 def my_map_with_index(array)
-
-  return p nil unless block_given?
+  return unless block_given?
   output = []
-  array.each_with_index { |elem, indx| output << yield(elem, indx) }
-  return output
 
+  for elem in array
+    output << yield(elem, array.index(elem))
+  end
+  output
 end
