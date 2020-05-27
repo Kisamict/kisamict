@@ -1,29 +1,26 @@
 class Station
-  attr_accessor :name
-
   def initialize(name)
-    self.name = name
+    @name = name
+  end
+
+  def name
+    @name
   end
 end
 
 class Route
-
   def initialize(from, to)
-    @from = from
-    @to = to
-    @name = "#{@from.name}-#{@to.name}"
+    @name = "#{from.name}-#{to.name}"
+    @list = [from, to]
   end
 
   def list
-    return @from.name, @to.name
+    @list
   end
-
 end
 
 class Train
-  attr_reader :speed, :wagons
-
-  def initialize(number, type, wagons)
+  def initialize(number, type, wagons = 0)
     @number = number
     @type = type
     @wagons = wagons
@@ -31,21 +28,26 @@ class Train
   end
 
   def go
-    @speed = 40
+    @speed += 10
+  end
+
+  def speed
+    @speed
   end
 
   def stop
     @speed = 0
   end
 
-  def add_remove(arg)
-    return "You can't remove or add wagons until train stops" unless @speed == 0
+  def wagons
+    @wagons
+  end
 
-    case arg
-    when "add"
-      @wagons += 1
-    when "remove"
-      @wagons -= 1 unless @wagons == 0
-    end
+  def hook
+    @wagons += 1 unless @speed > 0
+  end
+
+  def unhook
+    @wagons -= 1 unless @wagons <= 0 || @speed > 0
   end
 end
