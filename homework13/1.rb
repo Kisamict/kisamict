@@ -6,12 +6,12 @@ class Station
     @trains = []
   end
 
-  def trains_by(type)
-    @trains.find_all{ |train| train.type == type }
-  end
-
   def accept_train(train)
     @trains << train
+  end
+
+  def trains_by_type(type)
+    @trains.find_all{ |train| train.type == type }
   end
 
   def send_train(train)
@@ -32,20 +32,24 @@ class Route
   end
 
   def remove(station)
-    if station != @stations.first && station != @stations.last
-      @stations.delete(station)
-    end
+    return if end_station?(station)
+    @stations.delete(station)
+  end
+
+  private
+
+  def end_station?(station)
+    station == @stations.first || station == @stations.last
   end
 end
 
 class Train
   attr_reader :wagons, :speed, :type, :route
 
-  def initialize(number, type)
+  def initialize(number)
     @number = number
-    @type = type
-    @wagons = []
     @speed = 0
+    @wagons = []
   end
 
   def move_forward
@@ -74,7 +78,7 @@ class Train
   end
 
   def next_station
-     @route.stations[@station_index + 1]
+    @route.stations[@station_index + 1]
   end
 
   def previous_station
@@ -90,7 +94,7 @@ class Train
   end
 
   def hook(wagon)
-    @wagons << wagon if speed.zero? && train_compatible?(wagon)
+    @wagons << wagon if speed.zero?
   end
 
   def unhook(wagon)
@@ -99,22 +103,41 @@ class Train
 
   private
 
-  # Метод проверки соовместимости поездов с вагонами нужен только для методов hook и unhook, поэтому поместил в private
-
-  def train_compatible?(wagon)
-    return true if type == "CargoTrain" && wagon.class == CargoWagon || type == "PassengerTrain" && wagon.class == PassengerWagon
-    false
-  end
-
+  attr_reader :station_index
 end
 
-class CargoWagon
+class CargoTrain < Train
+  def initialize(number)
+    super
+    @type = "CargoTrain"
+  end
+
+  def hook(wagon)
+    super if wagon.is_a?(CargoWagon)
+  end
+end
+
+class PassengerTrain < Train
+  def initialize(number)
+    super
+    @type = "PassengerTrain"
+  end
+
+  def hook(wagon)
+    super if wagon.is_a?(PassengerWagon)
+  end
+end
+
+class Wagon
+end
+
+class CargoWagon < Wagon
   def initialize(volume)
     @volume = volume
   end
 end
 
-class PassengerWagon
+class PassengerWagon < Wagon
   def initialize(seats)
     @seats = seats
   end
