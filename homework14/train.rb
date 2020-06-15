@@ -26,6 +26,7 @@ class Train
   def route=(route)
     @route = route
     @station_index = 0
+    current_station.accept_train(self)
   end
 
   def current_station
