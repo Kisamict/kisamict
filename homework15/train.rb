@@ -11,7 +11,7 @@ class Train
     @number = number
     @speed = 0
     @wagons = []
-    @@all << self
+    @@all_trains << self
   end
 
   def move_forward
