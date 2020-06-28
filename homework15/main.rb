@@ -1,12 +1,12 @@
 require_relative "requireable"
 
 class App
-
   def initialize
     @stations = []
     @trains = []
     @routes = []
     @wagons = []
+    @named_stations = stations_names
   end
 
   def call
@@ -44,12 +44,14 @@ class App
       when "15"
         stations
       else
-        puts invalid_input
+        invalid_input
       end
     end
   end
 
   private
+
+  attr_accessor :named_stations
 
   INTERFACE_OPTIONS = [
     "1. Создать станцию",
@@ -73,6 +75,7 @@ class App
   def create_station
     print "Название новой станции: "
     @stations << Station.new(accept_input)
+    self.named_stations = stations_names
   end
 
   def create_train
@@ -94,7 +97,7 @@ class App
   def create_route
     numered_list(named_stations)
     puts "Выберите начальную и конечную станции"
-    @routes << Route.new(my_find(@stations), my_find(@stations))
+    @routes << Route.new(find_object(@stations), find_object(@stations))
     puts "Маршрут создан"
   end
 
@@ -126,7 +129,7 @@ class App
 
   def assign_route
     train = choose_train
-    puts "Маршрут назначен" if train.route=(choose_route)
+    puts "Маршрут назначен"if train.route=(choose_route)
   end
 
   def hook_wagon
@@ -153,52 +156,46 @@ class App
     numered_list(named_stations)
   end
 
-  def named_stations
-    @stations.map(&:name)
-  end
-
   def trains_on_station
     numered_list(choose_station.trains)
   end
 
-  def my_find(array)
-    array[accept_input.to_i-1]
+  def choose_train
+    puts "Поезд?"
+    numered_list(@trains)
+    find_object(@trains)
+  end
+
+  def choose_station
+    puts "Станция?"
+    numered_list(named_stations)
+    find_object(@stations)
+  end
+
+  def choose_route
+    puts "Маршрут?"
+    numered_list(@routes)
+    find_object(@routes)
+  end
+
+  def choose_wagon
+    puts "Вагон?"
+    numered_list(@wagons)
+    find_object(@wagons)
+  end
+
+  def find_object(array)
+    input = accept_input
+    return puts invalid_input if input.to_i > array.length || input == 0
+    array[input.to_i-1]
   end
 
   def numered_list(array)
     array.each.with_index(1) {|element, index| puts "###{index}: #{element}"}
   end
 
-  def choose_train
-    puts "Поезд?"
-    numered_list(@trains)
-    input = accept_input
-    return puts invalid_input if input.to_i > @trains.length || input == 0
-    @trains[input.to_i-1]
-  end
-
-  def choose_station
-    puts "Станция?"
-    numered_list(named_stations)
-    input = accept_input
-    return puts invalid_input if input.to_i > @stations.length || input == 0
-    @stations[input.to_i-1]
-  end
-
-  def choose_route
-    puts "Маршрут?"
-    numered_list(@routes)
-    input = accept_input
-    return puts invalid_input if input.to_i > @wagons.length || input == 0
-    @routes[input.to_i-1]
-  end
-
-  def choose_wagon
-    puts "Вагон?"
-    numered_list(@wagons)
-    input = accept_input
-    return puts invalid_input if input.to_i > @wagons.length || input == 0
-    @wagons[input.to_i-1]
+  def stations_names
+    @stations.map(&:name)
   end
 
   def invalid_input

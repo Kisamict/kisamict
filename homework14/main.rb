@@ -6,11 +6,12 @@ class App
     @trains = []
     @routes = []
     @wagons = []
+    @named_stations = stations_names
   end
 
   def call
     loop do
-      puts interface
+      puts INTERFACE_OPTIONS
       case accept_input
       when "0"
         return
@@ -40,6 +41,8 @@ class App
         show_stations
       when "13"
         trains_on_station
+      when "15"
+        stations
       else
         invalid_input
       end
@@ -48,32 +51,35 @@ class App
 
   private
 
-  def interface
-    [
-      "1. Создать станцию",
-      "2. Создать поезд",
-      "3. Создать маршрут",
-      "4. Создать вагон",
-      "5. Добавить станцию в маршрут",
-      "6. Удалить станцию из маршрута",
-      "7. Назначить маршрут",
-      "8. Прицепить вагон",
-      "9. Отцепить вагон",
-      "10. Начать движение поезда",
-      "11. Вернуть поезд на предыдущую станцию",
-      "12. Посмотреть список станций",
-      "13. Посмотреть поезда на станции",
-      "0. Выход"
-    ]
-  end
+  attr_accessor :named_stations
+
+  INTERFACE_OPTIONS = [
+    "1. Создать станцию",
+    "2. Создать поезд",
+    "3. Создать маршрут",
+    "4. Создать вагон",
+    "5. Добавить станцию в маршрут",
+    "6. Удалить станцию из маршрута",
+    "7. Назначить маршрут",
+    "8. Прицепить вагон",
+    "9. Отцепить вагон",
+    "10. Начать движение поезда",
+    "11. Вернуть поезд на предыдущую станцию",
+    "12. Посмотреть список станций",
+    "13. Посмотреть поезда на станции",
+    "0. Выход"
+  ].map(&:freeze).freeze
+
+  TYPES = ["Пассажирский", "Грузовой"].map(&:freeze).freeze
 
   def create_station
     print "Название новой станции: "
     @stations << Station.new(accept_input)
+    self.named_stations = stations_names
   end
 
   def create_train
-    puts types
+    numered_list(TYPES)
     case accept_input
     when "1"
       print "Номер поезда: "
@@ -84,23 +90,19 @@ class App
       @trains << CargoTrain.new(accept_input)
       puts "Поезд создан"
     else
-      invalid_input
+      puts invalid_input
     end
   end
 
-  def types
-    ["1. Пассажирский", "2. Грузовой"]
-  end
-
   def create_route
-    numered_list(@stations.map(&:name))
+    numered_list(named_stations)
     puts "Выберите начальную и конечную станции"
-    @routes << Route.new(my_find(@stations), my_find(@stations))
+    @routes << Route.new(find_object(@stations), find_object(@stations))
     puts "Маршрут создан"
   end
 
   def create_wagon
-    puts types
+    numered_list(TYPES)
     case accept_input
     when "1"
       print "Количество мест: "
@@ -111,28 +113,33 @@ class App
       @wagons << CargoWagon.new(accept_input)
       puts "Вагон создан"
     else
-      invalid_input
+      puts invalid_input
     end
   end
 
   def add_station
-    puts "Станция добавлена" if choose_route.add(choose_station)
+    route = choose_route
+    puts "Станция добавлена" if route.add(choose_station)
   end
 
   def remove_station
-    puts "Станция удалена" if choose_route.remove(choose_station)
+    route = choose_route
+    puts "Станция удалена" if route.remove(choose_station)
   end
 
   def assign_route
-    puts "Маршрут назначен" if choose_train.route=(choose_route)
+    train = choose_train
+    puts "Маршрут назначен"if train.route=(choose_route)
   end
 
   def hook_wagon
-    puts "Вагон прицплен" if choose_train.hook(choose_wagon)
+    train = choose_train
+    puts "Вагон прицплен" if train.hook(choose_wagon)
   end
 
   def unhook_wagon
-    puts "Вагон отцеплен" if choose_train.unhook(choose_wagon)
+    train = choose_train
+    puts "Вагон отцеплен" if train.unhook(choose_wagon)
   end
 
   def move_forward
@@ -146,47 +153,53 @@ class App
   end
 
   def show_stations
-    numered_list(@stations.map(&:name))
+    numered_list(named_stations)
   end
 
   def trains_on_station
     numered_list(choose_station.trains)
   end
 
-  def my_find(array)
-    array[accept_input.to_i - 1]
-  end
-
-  def numered_list(array)
-    array.each.with_index(1) {|element, index| puts "#{index}: #{element}"}
-  end
-
   def choose_train
     puts "Поезд?"
     numered_list(@trains)
-    @trains[accept_input.to_i-1]
+    find_object(@trains)
   end
 
   def choose_station
     puts "Станция?"
-    numered_list(@stations.map(&:name))
-    @stations[accept_input.to_i-1]
+    numered_list(named_stations)
+    find_object(@stations)
   end
 
   def choose_route
     puts "Маршрут?"
     numered_list(@routes)
-    @routes[accept_input.to_i-1]
+    find_object(@routes)
   end
 
   def choose_wagon
     puts "Вагон?"
     numered_list(@wagons)
-    @wagons[accept_input.to_i-1]
+    find_object(@wagons)
+  end
+
+  def find_object(array)
+    input = accept_input
+    return puts invalid_input if input.to_i > array.length || input == 0
+    array[input.to_i-1]
+  end
+
+  def numered_list(array)
+    array.each.with_index(1) {|element, index| puts "###{index}: #{element}"}
+  end
+
+  def stations_names
+    @stations.map(&:name)
   end
 
   def invalid_input
-    puts "Неправильный ввод"
+    "Неправильный ввод"
   end
 
   def accept_input
