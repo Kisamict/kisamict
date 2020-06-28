@@ -1,18 +1,18 @@
 require_relative "station.rb"
 
 class Route
-  @@all_routes = {}
+  @@all = {}
 
   attr_reader :stations, :name
 
   def self.all
-    @@all_routes
+    @@all
   end
 
   def initialize(from, to)
     @name = "#{from.name}-#{to.name}"
     @stations = [from, to]
-    @@all_routes[self] = self.stations
+    @@all[self] = self.stations
   end
 
   def add(station)

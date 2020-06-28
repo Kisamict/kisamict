@@ -1,17 +1,17 @@
 class Train
-  @@all_trains = []
+  @@all = []
 
   attr_reader :wagons, :speed, :type, :route, :number
 
   def self.find(number)
-    @@all_trains.bsearch { |train| train.number == number }
+    @@all.find { |train| train.number == number }
   end
 
   def initialize(number)
     @number = number
     @speed = 0
     @wagons = []
-    @@all_trains << self
+    @@all << self
   end
 
   def move_forward
