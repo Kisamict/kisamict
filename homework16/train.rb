@@ -4,7 +4,7 @@ class Train
   attr_reader :wagons, :speed, :type, :route, :number
 
   def self.find(number)
-    @@all.bsearch { |train| train.number == number }
+    @@all.find { |train| train.number == number }
   end
 
   def initialize(number)
