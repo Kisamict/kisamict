@@ -10,20 +10,19 @@ class PassengerWagon < Wagon
 
   def initialize(seats)
     validate!(seats)
-    return unless valid?
 
     @seats = seats
     @occupied_seats = 0
     @available_seats = seats - occupied_seats
 
     write_log("Seats: #{seats} |")
+
+  rescue AttributeValidationError
   end
 
   def occupy_seat
-    raise AllSeatsOccupiedError, 'All seats is occupied' if @occupied_seats == @seats
-  rescue AllSeatsOccupiedError => e
-    write_error(e)
-  else
+    raise AllSeatsOccupiedError.new('All seats occupied', self.class) if @occupied_seats == @seats
     @occupied_seats += 1
+  rescue AllSeatsOccupiedError
   end
 end

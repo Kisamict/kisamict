@@ -7,29 +7,34 @@ class Route
   include Logger
 
   class << self
-    attr_accessor :all
+    def all
+      @all ||= {}
+    end
   end
 
   attr_reader :stations, :name
 
   def initialize(from, to)
+    validate!(from, to)
+
     @name = "#{from.name}-#{to.name}"
     @stations = [from, to]
-    validate!
-    return unless valid?
 
-    Route.all ||= {}
-    Route.all[self] = self.stations
+    self.class.all[self] = self.stations
     write_log("Name: #{name}")
+
+  rescue RouteAttributeError
   end
 
   def add(station)
     return if @stations.include?(station)
+
     @stations.insert(-2, station)
   end
 
   def remove(station)
     return if end_station?(station)
+
     @stations.delete(station)
   end
 
@@ -39,13 +44,8 @@ class Route
     station == @stations.first || station == @stations.last
   end
 
-  def validate!
-    raise RouteAttributeError,  "Route must contain only stations" unless stations.all? { |station| station.is_a?(Station) }
-    raise RouteAttributeError, "Route must consist of two different stations" if stations.first == stations.last
-  rescue RouteAttributeError => e
-    @valid = false
-    write_error(e)
-  else
-    @valid = true
+  def validate!(from, to)
+    raise RouteAttributeError.new("Arguments are not stations", self.class) unless [from, to].all? { |attr| attr.is_a?(Station) }
+    raise RouteAttributeError.new("Same station passed", self.class)  if from == to
   end
 end

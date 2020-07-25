@@ -6,20 +6,23 @@ class Station
   include Validator
 
   class << self
-    attr_accessor :all
+    def all
+      @all ||= []
+    end
   end
 
   attr_reader :name, :trains
 
   def initialize(name)
     validate!(name)
-    return unless valid?
 
     @name = name
     @trains = []
 
-    self.class.all ||= [] << self
+    self.class.all << self
     write_log(station_info)
+
+  rescue AttributeValidationError
   end
 
   def station_info

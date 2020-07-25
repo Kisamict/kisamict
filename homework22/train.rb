@@ -8,26 +8,29 @@ class Train
   include InstanceCounter
 
   class << self
-    attr_accessor :all
+    def all
+      @all ||= []
+    end
 
-    def self.find(number)
-      @@all.find { |train| train.number == number }
+    def find(number)
+      all.find { |train| train.number == number }
     end
   end
 
-  attr_reader :wagons, :speed, :type, :route, :number
+  attr_reader :wagons, :speed, :route, :number
 
   def initialize(number)
     validate!(number)
-    return unless valid?
 
     @number = number
     @speed = 0
     @wagons = []
 
-    self.class.all ||= [] << self
+    self.class.all << self
     register_instance
     write_log(train_info)
+
+  rescue AttributeValidationError
   end
 
   def train_info

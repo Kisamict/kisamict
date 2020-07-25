@@ -4,7 +4,6 @@ require_relative 'logable'
 class CargoTrain < Train
   def initialize(number)
     super
-    @type = "CargoTrain"
   end
 
   def hook(wagon)

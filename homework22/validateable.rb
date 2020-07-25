@@ -1,16 +1,8 @@
-require_relative 'logable'
+require_relative 'errors/errors'
 
 module Validator
-  include Logger
-
-  def valid?
-    @valid
-  end
-
   def validate!(attribute)
-    raise AttributeValidationError, "Attribute value is not valid" unless attr_valid?(attribute)
-  rescue AttributeValidationError => e
-    write_error(e)
+    raise AttributeValidationError.new("Invalid attribute value", self.class) unless attr_valid?(attribute)
   end
 
   private
@@ -18,11 +10,11 @@ module Validator
   def attr_valid?(attribute)
     case attribute
     when String
-      @valid = true if !(attribute.empty? || attribute.size > 50)
+      !(attribute.empty? || attribute.size > 50)
     when Integer
-      @valid = true if !(attribute.zero?)
+      !(attribute.zero?)
     else
-      @valid = false
+      false
     end
   end
 end

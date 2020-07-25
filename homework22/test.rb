@@ -1,7 +1,18 @@
 require_relative 'requireable'
 
 class AppTest
-  INFO_PROC = proc { |a, b, c| puts "#{a} | #{b} | #{c}" }
+  def self.info
+    Station.all.each do |station|
+      puts "Station: #{station.name}"
+      station.trains.each do |train|
+        puts "Train: #{train.number} | #{train.class} | #{train.wagons.size}"
+        train.wagons.each_with_index do |wagon, index|
+          puts "Wagon: #{index + 1} | #{wagon.available_seats} | #{wagon.occupied_seats}" if wagon.is_a?(PassengerWagon)
+          puts "Wagon: #{index + 1} | #{wagon.available_volume} | #{wagon.filled_volume}" if wagon.is_a?(CargoWagon)
+        end
+      end
+    end
+  end
 
   attr_reader :stations, :trains, :wagons, :routes
 
@@ -39,31 +50,6 @@ class AppTest
   def hook_wagons(n)
     trains.each do |train|
       n.times { train.hook(wagons.sample) }
-    end
-  end
-
-  def info
-    Station.all.each do |station|
-      puts "Station: #{station.name}"
-      station_trains_info(station)
-    end
-  end
-
-  private
-
-  def station_trains_info(station)
-    station.each_train do |train|
-      INFO_PROC.call(train.number, train.type, train.wagons.size)
-      train_wagons_info(train)
-    end
-  end
-
-  def train_wagons_info(train)
-    case train.type
-    when "PassengerTrain"
-      train.each_wagon { |wagon, index| INFO_PROC.call(index + 1, wagon.class, "#{wagon.occupied_seats} #{wagon.available_seats}") }
-    when "CargoTrain"
-      train.each_wagon { |wagon, index| INFO_PROC.call(index + 1, wagon.class, "#{wagon.filled_volume} #{wagon.available_volume}") }
     end
   end
 end

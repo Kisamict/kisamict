@@ -19,9 +19,9 @@ module Logger
       end
     end
 
-    def write_error(error)
+    def write_error(error, where_from)
       File.open('logs/Errors.log', 'a') do |f|
-        f.puts "#{Time.now} | #{self.class} | #{error.message}"
+        f.puts "#{Time.now} | #{where_from} | #{error.message}"
       end
     end
   end

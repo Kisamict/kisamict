@@ -197,7 +197,7 @@ class App
   end
 
   def invalid_input
-    "Неправильный ввод"
+    "Неправильный ввод".freeze
   end
 
   def accept_input
