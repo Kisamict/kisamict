@@ -12,15 +12,15 @@ class Request
     @response = http.request(request)
   end
 
-  def res_status
+  def resp_status
     response&.code
   end
 
-  def res_body
+  def resp_body
     response&.body
   end
 
-  def res_headers
+  def resp_headers
     response&.each_header {}
   end
 
