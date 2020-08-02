@@ -7,7 +7,7 @@ class Train
 
   attr_reader :wagons, :speed, :type, :route, :number
 
-  def each_wagon(&block)
+  def each_wagon
     wagons.each_with_index { |wagon, idx| yield(wagon, idx) }
   end
 

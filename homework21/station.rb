@@ -14,7 +14,7 @@ class Station
     @@all << self
   end
 
-  def each_train(&block)
+  def each_train
     trains.each { |train| yield(train) }
   end
 

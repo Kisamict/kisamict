@@ -70,8 +70,6 @@ class App
     "0. Выход"
   ].map(&:freeze).freeze
 
-  TYPES = ["Пассажирский", "Грузовой"].map(&:freeze).freeze
-
   def create_station
     print "Название новой станции: "
     @stations << Station.new(accept_input)
@@ -79,7 +77,7 @@ class App
   end
 
   def create_train
-    numered_list(TYPES)
+    numered_list([PassengerTrain, CargoTrain])
     case accept_input
     when "1"
       print "Номер поезда: "
@@ -102,7 +100,7 @@ class App
   end
 
   def create_wagon
-    numered_list(TYPES)
+    numered_list([PassengerWagon, CargoWagon])
     case accept_input
     when "1"
       print "Количество мест: "
