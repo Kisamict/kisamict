@@ -1,6 +1,6 @@
 require_relative 'wagon'
-require_relative 'loggable'
-require_relative 'validateable'
+require_relative 'modules/loggable'
+require_relative 'modules/validateable'
 
 class PassengerWagon < Wagon
   include Loggable
@@ -16,7 +16,8 @@ class PassengerWagon < Wagon
 
     write_log("Seats: #{seats} |")
 
-  # rescue AttributeValidationError
+  rescue AttributeValidationError
+    sef.valid = false
   end
 
   def available_seats
@@ -24,10 +25,10 @@ class PassengerWagon < Wagon
   end
 
   def occupy_seat
-    raise AllSeatsOccupiedError.new('All seats occupied', self.class) if @occupied_seats == @seats
-    
+    raise AllSeatsOccupiedError.new('All seats are occupied', self.class) if @occupied_seats == @seats
+
     @occupied_seats += 1
-  # rescue AllSeatsOccupiedError
-  #   nil
+  rescue AllSeatsOccupiedError => e
+    e.message
   end
 end

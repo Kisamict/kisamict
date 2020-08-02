@@ -1,4 +1,4 @@
-require_relative '../loggable'
+require_relative '../modules/loggable'
 
 class SelfLoggableError < StandardError
   include Loggable

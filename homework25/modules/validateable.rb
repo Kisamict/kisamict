@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'errors/errors'
+require_relative '../errors/errors'
 
 module Validateable
   attr_reader :valid

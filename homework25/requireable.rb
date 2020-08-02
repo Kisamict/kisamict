@@ -6,8 +6,8 @@ require_relative "cargo_train"
 require_relative "cargo_wagon"
 require_relative "passenger_train"
 require_relative "passenger_wagon"
-require_relative "validateable"
-require_relative "manufacturer"
-require_relative "instance_counter"
-require_relative 'loggable'
-require_relative 'errors/errors'
+require_relative "modules/validateable"
+require_relative "modules/manufacturer"
+require_relative "modules/instance_counter"
+require_relative 'modules/loggable'
+require_relative './errors/errors'

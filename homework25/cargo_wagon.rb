@@ -1,6 +1,6 @@
 require_relative 'wagon'
-require_relative 'validateable'
-require_relative 'loggable'
+require_relative 'modules/validateable'
+require_relative 'modules/loggable'
 
 class CargoWagon < Wagon
   include Validateable
@@ -16,7 +16,8 @@ class CargoWagon < Wagon
 
     write_log("Volume: #{volume} |")
 
-  # rescue AttributeValidationError
+  rescue AttributeValidationError
+    self.valid = false
   end
 
   def available_volume
@@ -27,6 +28,7 @@ class CargoWagon < Wagon
     raise VolumeExceededError.new('Volume exceeded', self.class) if num > available_volume
 
     @filled_volume += num
-  # rescue VolumeExceededError
+  rescue VolumeExceededError => e
+    e.message
   end
 end

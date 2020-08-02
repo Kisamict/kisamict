@@ -1,6 +1,6 @@
-require_relative 'instance_counter.rb'
-require_relative 'validateable'
-require_relative 'loggable'
+require_relative 'modules/instance_counter.rb'
+require_relative 'modules/validateable'
+require_relative 'modules/loggable'
 
 class Train
   include Loggable

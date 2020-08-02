@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'loggable'
-require_relative 'validateable'
+require_relative 'modules/loggable'
+require_relative 'modules/validateable'
 
 class Station
   include Loggable

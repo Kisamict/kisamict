@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'validateable'
+require_relative 'modules/validateable'
 require_relative 'station'
-require_relative 'loggable'
+require_relative 'modules/loggable'
 
 class Route
   include Validateable

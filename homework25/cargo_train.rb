@@ -1,5 +1,5 @@
 require_relative 'train'
-require_relative 'loggable'
+require_relative 'modules/loggable'
 
 class CargoTrain < Train
   def initialize(number)
