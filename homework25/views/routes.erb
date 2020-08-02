@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Routes</h1>
+    <form action="/routes" method="post">
+      <label for="first_station">Choose first station</label>
+      <select name="first_station">
+        <% @stations.each do |station| %>
+          <option value="<%= station.name %>"><%= station.name %></option>
+        <% end %>
+      </select>
+      <label for="last_station">Choose last station</label>
+      <select name="last_station">
+        <% @stations.each do |station| %>
+          <option value="<%= station.name %>"><%= station.name %></option>
+        <% end %>
+      </select>
+      <input type="submit" value="create">
+    </form>
+    <div class="">
+      <ul>
+        <% @routes_info.each do |line| %>
+          <li>
+            <%= line %>
+          </li>
+        <% end %>
+      </ul>
+    </div>>
+    <a href="/">Main</a>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Stations</title>
+  </head>
+  <body>
+    <h1>Stations</h1>
+    <form action="/stations" method="post">
+      <label for="name"> Station name </label>
+      <input type="text" name="name">
+      <input type="submit" value="create">
+    </form>
+    <div class="">
+      <ul>
+        <% @stations_info.each do |line| %>
+          <li>
+            <%= line %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <a href="/">Main</a>
+  </body>
+</html>
